@@ -23,10 +23,20 @@ const meaningList = document.querySelector('.meaning-list');
 const synonymList = document.querySelector('.synonym-list');
 const wordType = document.querySelector('.word-type');
 const sourceLink = document.querySelector('.source-link');
+const pouseBtn = document.querySelector('.pouse-btn');
+const mainElement = document.querySelector('main');
+const footer = document.querySelector('footer');
+
+mainElement.style.display = 'none';
+footer.style.display = 'none';
 
 searchInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
         searchWord(searchInput.value.trim());
+        mainElement.style.display = 'block';
+        footer.style.display = 'block';
+        if (pouseBtn) pouseBtn.style.opacity = '1';
+        if (pouseIcon) pouseIcon.style.opacity = '1';
     }
 });
 
@@ -111,4 +121,16 @@ function searchWord(word) {
             synonymList.textContent = '';
             sourceLink.textContent = '';
         });
+
+        if (pouseBtn) {
+            pouseBtn.onclick = function() {
+                if (audio) {
+                    audio.currentTime = 0;
+                    audio.play();
+                }
+            };
+        }
+
+        
+
 }
