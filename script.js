@@ -1,18 +1,24 @@
 const SW = document.querySelector('.switch');
 const body = document.querySelector('body');
+const moon_purple = document.querySelector('.svg2');
+const moon_gray = document.querySelector('.svg1');
 
 if (SW) {
-    SW.onclick = function() {
+    SW.onclick = function () {
         if (SW.classList.contains('active')) {
             SW.classList.remove('active');
             SW.classList.add('deactive');
             body.classList.remove('black');
             body.classList.add('white');
+            moon_gray.classList.add("moon-gray");
+            moon_purple.classList.remove("moon-purple");
         } else {
             SW.classList.remove('deactive');
             SW.classList.add('active');
             body.classList.remove('white');
             body.classList.add('black');
+            moon_purple.classList.add("moon-purple");
+            moon_gray.classList.remove("moon-gray");
         }
     };
 }
@@ -26,31 +32,34 @@ const sourceLink = document.querySelector('.source-link');
 const pouseBtn = document.querySelector('.pouse-btn');
 const mainElement = document.querySelector('main');
 const footer = document.querySelector('footer');
+const welcome_text = document.querySelector('.welcome');
 
 mainElement.style.display = 'none';
 footer.style.display = 'none';
+welcome_text.style.display = 'block';
 
 searchInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
-        searchWord(searchInput.value.trim());
-        mainElement.style.display = 'block';
-        footer.style.display = 'block';
-        if (pouseBtn) pouseBtn.style.opacity = '1';
-        if (pouseIcon) pouseIcon.style.opacity = '1';
+        const word = searchInput.value.trim();
+        if (word) {
+            searchWord(word);
+            mainElement.style.display = 'block';
+            footer.style.display = 'block';
+            welcome_text.style.display = 'none';
+        }
     }
 });
 
 function searchWord(word) {
-    if (!word) return;
     fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
         .then(response => {
             if (!response.ok) {
                 if (response.status === 404) {
-                    throw new Error('Word not found. Please check your spelling or try another word.');
+                    throw new Error('Word not found.');
                 } else if (response.status === 429) {
-                    throw new Error('Too many requests. Please wait and try again.');
+                    throw new Error('Too many requests.');
                 } else {
-                    throw new Error(`An error occurred: ${response.statusText} (Status: ${response.status})`);
+                    throw new Error(`Error: ${response.statusText}`);
                 }
             }
             return response.json();
@@ -58,79 +67,75 @@ function searchWord(word) {
         .then(data => {
             const entry = data[0];
             wordTitle.textContent = entry.word || '';
+            wordType.textContent = '';
+            meaningList.innerHTML = '';
+            synonymList.textContent = '';
+            sourceLink.textContent = '';
 
             if (entry.meanings && entry.meanings.length > 0) {
                 const firstMeaning = entry.meanings[0];
                 wordType.textContent = firstMeaning.partOfSpeech || '';
-
-                while (meaningList.firstChild) {
-                    meaningList.removeChild(meaningList.firstChild);
-                }
 
                 firstMeaning.definitions.forEach(def => {
                     const li = document.createElement('li');
                     li.className = 'meaning-item';
                     li.textContent = def.definition;
                     meaningList.appendChild(li);
-
-                   
                 });
 
                 let synonymsSet = new Set();
                 entry.meanings.forEach(meaning => {
-                    if (meaning.synonyms && meaning.synonyms.length) {
+                    if (meaning.synonyms) {
                         meaning.synonyms.forEach(syn => synonymsSet.add(syn));
                     }
-                    if (meaning.definitions && meaning.definitions.length) {
-                        meaning.definitions.forEach(def => {
-                            if (def.synonyms && def.synonyms.length) {
-                                def.synonyms.forEach(syn => synonymsSet.add(syn));
-                            }
-                        });
-                    }
+                    meaning.definitions.forEach(def => {
+                        if (def.synonyms) {
+                            def.synonyms.forEach(syn => synonymsSet.add(syn));
+                        }
+                    });
                 });
                 const synonyms = synonymsSet.size
                     ? Array.from(synonymsSet).join(', ')
                     : 'None';
                 synonymList.textContent = synonyms;
 
-                sourceLink.textContent = entry.sourceUrls ? entry.sourceUrls[0] : '';
-            } else {
-                wordType.textContent = '';
-                while (meaningList.firstChild) {
-                    meaningList.removeChild(meaningList.firstChild);
+                if (entry.sourceUrls && entry.sourceUrls.length > 0) {
+                    sourceLink.textContent = entry.sourceUrls[0];
+                    sourceLink.href = entry.sourceUrls[0];
                 }
+            } else {
                 const li = document.createElement('li');
                 li.className = 'meaning-item';
                 li.textContent = 'No definitions found.';
                 meaningList.appendChild(li);
-                synonymList.textContent = '';
-                sourceLink.textContent = '';
+            }
+
+            let audio = null;
+            if (entry.phonetics && entry.phonetics.length > 0) {
+                const phonetic = entry.phonetics.find(p => p.audio);
+                if (phonetic && phonetic.audio) {
+                    audio = new Audio(phonetic.audio);
+                }
+            }
+
+            if (pouseBtn) {
+                pouseBtn.onclick = function () {
+                    if (audio) {
+                        audio.currentTime = 0;
+                        audio.play();
+                    }
+                };
             }
         })
-        .catch(() => {
+        .catch(error => {
             wordTitle.textContent = 'Word not found';
             wordType.textContent = '';
-            while (meaningList.firstChild) {
-                meaningList.removeChild(meaningList.firstChild);
-            }
+            meaningList.innerHTML = '';
             const li = document.createElement('li');
             li.className = 'meaning-item';
-            li.textContent = 'No definitions found.';
+            li.textContent = error.message;
             meaningList.appendChild(li);
             synonymList.textContent = '';
             sourceLink.textContent = '';
         });
-
-        if (pouseBtn) {
-            pouseBtn.onclick = function() {
-                if (audio) {
-                    audio.currentTime = 0;
-                    audio.play();
-                }
-            };
-        }
-
-        
-
 }

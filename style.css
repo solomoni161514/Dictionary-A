@@ -127,3 +127,77 @@ hr {
     justify-content: space-between;
     align-items: center;
 }
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 95%;
+    margin: 0 auto;
+
+}
+
+.header-container div {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.svg_div {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    bottom: 10px;
+}
+
+.svg_div > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+
+.svg1{
+    z-index: 1;
+}
+
+
+.moon-purple{
+    z-index: 1;
+}
+
+.moon-gray {
+    z-index: 1;
+}
+
+.search-svg{
+    position: absolute;
+    margin: 15px;
+}
+
+ul{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.welcome {
+    width: 500px;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    color: purple;
+    font-size: 70px;
+    text-transform: capitalize;
+    font-weight: 1000;
+    text-align: center;
+    margin-top: 150px;
+}
+
+
+footer a {
+    text-decoration: none;
+    color: rgb(197, 2, 197);
+}
