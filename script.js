@@ -33,11 +33,7 @@ const pouseBtn = document.querySelector('.pouse-btn');
 const mainElement = document.querySelector('main');
 const footer = document.querySelector('footer');
 const welcome_text = document.querySelector('.welcome');
-
-mainElement.style.display = 'none';
-footer.style.display = 'none';
-welcome_text.style.display = 'block';
-
+meaningList.innerHTML = ''
 searchInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
         const word = searchInput.value.trim();
@@ -67,33 +63,36 @@ function searchWord(word) {
         .then(data => {
             const entry = data[0];
             wordTitle.textContent = entry.word || '';
-            wordType.textContent = '';
             meaningList.innerHTML = '';
             synonymList.textContent = '';
             sourceLink.textContent = '';
+            wordType.textContent = '';
 
-            if (entry.meanings && entry.meanings.length > 0) {
-                const firstMeaning = entry.meanings[0];
-                wordType.textContent = firstMeaning.partOfSpeech || '';
+            const allMeanings = entry.meanings;
+            let synonymsSet = new Set();
 
-                firstMeaning.definitions.forEach(def => {
-                    const li = document.createElement('li');
-                    li.className = 'meaning-item';
-                    li.textContent = def.definition;
-                    meaningList.appendChild(li);
-                });
+            if (allMeanings && allMeanings.length > 0) {
+                allMeanings.forEach(meaning => {
+                    const typeHeader = document.createElement('h4');
+                    typeHeader.textContent = meaning.partOfSpeech;
+                    meaningList.appendChild(typeHeader);
 
-                let synonymsSet = new Set();
-                entry.meanings.forEach(meaning => {
-                    if (meaning.synonyms) {
-                        meaning.synonyms.forEach(syn => synonymsSet.add(syn));
-                    }
                     meaning.definitions.forEach(def => {
+                        const li = document.createElement('li');
+                        li.className = 'meaning-item';
+                        li.textContent = def.definition;
+                        meaningList.appendChild(li);
+
                         if (def.synonyms) {
                             def.synonyms.forEach(syn => synonymsSet.add(syn));
                         }
                     });
+
+                    if (meaning.synonyms) {
+                        meaning.synonyms.forEach(syn => synonymsSet.add(syn));
+                    }
                 });
+
                 const synonyms = synonymsSet.size
                     ? Array.from(synonymsSet).join(', ')
                     : 'None';

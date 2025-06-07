@@ -17,7 +17,7 @@ header {
 
 body {
     padding: 2.5rem;
-    font-family: cursive;
+    font-family: sans-serif;
 }
 
 .black {
@@ -179,6 +179,7 @@ ul{
     display: flex;
     flex-direction: column;
     gap: 20px;
+    list-style-position: inside;
 }
 
 .welcome {
@@ -200,4 +201,16 @@ ul{
 footer a {
     text-decoration: none;
     color: rgb(197, 2, 197);
+}
+
+main {
+    display: none;
+}
+
+footer {
+    display: none;
+}
+
+.welcome {
+    display: block;
 }
