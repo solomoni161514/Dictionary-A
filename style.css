@@ -214,3 +214,25 @@ footer {
 .welcome {
     display: block;
 }
+
+
+.divider{
+    position: relative;
+    top: 40px;
+    width: 92%;
+    right: 4%;
+}
+
+
+
+
+li{
+    list-style-type: disc;
+    color: inherit;
+    }
+
+    li::marker {
+        color: rgb(197, 2, 197);
+}
+
+

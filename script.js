@@ -83,6 +83,17 @@ function searchWord(word) {
                         li.textContent = def.definition;
                         meaningList.appendChild(li);
 
+                        // Optionally, display example if available
+                        if (def.example) {
+                            const p = document.createElement('p');
+                            p.className = 'example';
+                            p.textContent = `Example: ${def.example}`;
+                            p.style.color = 'rgb(197, 2, 197)';
+                            p.style.opacity = '0.6';
+                            meaningList.appendChild(p);
+                        }                   
+
+
                         if (def.synonyms) {
                             def.synonyms.forEach(syn => synonymsSet.add(syn));
                         }
@@ -125,6 +136,12 @@ function searchWord(word) {
                     }
                 };
             }
+
+            // Show hr if found
+            const hr = document.querySelector('hr');
+            if (hr) {
+                hr.style.display = '';
+            }
         })
         .catch(error => {
             wordTitle.textContent = 'Word not found';
@@ -136,5 +153,34 @@ function searchWord(word) {
             meaningList.appendChild(li);
             synonymList.textContent = '';
             sourceLink.textContent = '';
+            const hr = document.querySelector('hr');
+            const meaning = document.querySelector('.section-title')
+            const meaningItem = document.querySelector('.meaning-item')
+            const syn = document.querySelector('.synonyms')
+            const sourceTitlen = document.querySelector('.source-title')
+            const svg = document.querySelector('svg')
+            if (hr) {
+                hr.style.display = 'none';
+            }
+            if (pouseBtn) {
+                pouseBtn.style.display = 'none';
+            }
+            if (meaning) {
+                meaning.style.display = 'none';
+            }
+            if (meaningItem) {
+                meaningItem.style.display = 'none';
+            }
+            if (syn) {
+                syn.style.display = 'none';
+            }
+            if (sourceTitlen) {
+                sourceTitlen.style.display = 'none';
+            }
+            if (wordTitle) {
+                wordTitle.style.display = 'none';
+                
+            }
         });
+        
 }
