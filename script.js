@@ -33,6 +33,7 @@ const pouseBtn = document.querySelector('.pouse-btn');
 const mainElement = document.querySelector('main');
 const footer = document.querySelector('footer');
 const welcome_text = document.querySelector('.welcome');
+const errorDiv = document.querySelector('.errorDiv');
 meaningList.innerHTML = ''
 searchInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
@@ -42,6 +43,7 @@ searchInput.addEventListener('keypress', (e) => {
             mainElement.style.display = 'block';
             footer.style.display = 'block';
             welcome_text.style.display = 'none';
+            errorDiv.style.display = 'none';
         }
     }
 });
@@ -159,28 +161,18 @@ function searchWord(word) {
             const syn = document.querySelector('.synonyms')
             const sourceTitlen = document.querySelector('.source-title')
             const svg = document.querySelector('svg')
-            if (hr) {
-                hr.style.display = 'none';
+            
+            
+            if (mainElement) {
+                mainElement.style.display = 'none';
             }
-            if (pouseBtn) {
-                pouseBtn.style.display = 'none';
+            if (footer) {
+                footer.style.display = 'none';
             }
-            if (meaning) {
-                meaning.style.display = 'none';
+            if (errorDiv) {
+                errorDiv.style.display = 'flex';
             }
-            if (meaningItem) {
-                meaningItem.style.display = 'none';
-            }
-            if (syn) {
-                syn.style.display = 'none';
-            }
-            if (sourceTitlen) {
-                sourceTitlen.style.display = 'none';
-            }
-            if (wordTitle) {
-                wordTitle.style.display = 'none';
-                
-            }
+
         });
         
 }
